@@ -234,3 +234,72 @@ http://ionicframework.com/docs/theming/ */
     --ion-card-background: #1e1e1e;
   }
 }
+
+.titleTable{
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+.headerTable > ion-col {
+  background-color: #7425f2;
+  border: solid 1px #fff;
+  color: #fff;
+  text-align: center;
+}
+
+.cellTable > ion-col {
+  border: 1px solid gray;
+  text-align: center;
+  border: solid 1px #fff;  
+}
+
+.bodyTable ion-row:nth-child(even){
+  background-color: #baccf1;
+}
+
+.bodyTable ion-row:nth-child(odd){
+  background-color: #eceef1;
+}
+
+.buttonsTable{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.buttonsTable > .btn-edit{
+  background-color: #0808e7;
+  padding: 5px;
+  border-radius: 15px;
+  color: #fff;
+  cursor: pointer;
+}
+.buttonsTable > .btn-remove{
+  background-color: #ed0b0b;
+  padding: 5px;
+  border-radius: 15px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.formCustomer{
+  margin: 0 36px;
+}
+
+.fieldForm{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+.fieldForm > label{
+  margin-bottom: 4px;
+  color: #292929;
+}
+.fieldForm > input{
+  border: 1px solid #292929;
+  border-radius: 8px;
+}
+.fieldForm >div{
+  color: #ff0000;
+}
+
