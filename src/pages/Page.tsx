@@ -1,29 +1,23 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRow, IonCol, IonGrid, IonIcon, IonPopover, IonCard, IonButton } from '@ionic/react';
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRow, IonCol, IonGrid, IonIcon, IonCard, IonButton, useIonAlert } from '@ionic/react';
 import { addCircle, closeOutline, pencil } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
-import ExploreContainer from '../components/ExploreContainer';
+import { deleteById, getAll } from '../connectApi/RequestApi';
 import { Customer } from '../interfaces/Customer.interface';
 import './Page.css';
 
 const Page: React.FC = () => {
   const { name } = useParams<{ name: string; }>();
-  const [customers, setCustomers] = useState<Customer[]>()
+  const [customers, setCustomers] = useState<Customer[]>();
+  const [showAlert] = useIonAlert();
+  const [showConfirm] = useIonAlert();
 
-  const testData = [
-    { id: 1, name: "ruben dario guzman gonzalez", email: "rubendario981@hotmail.com", phone: "3177917132", address: "avninda siempre viva 843" },
-    { id: 2, name: "musa", email: "otro mail", phone: "6013325889", address: "avninda siempre viva 843" },
-    { id: 3, name: "fito", email: "mail.com", phone: "41564", address: "avninda siempre viva 843" },
-  ]
   useEffect(() => {
-    if (!localStorage.getItem("data")) {
-      localStorage.setItem("data", JSON.stringify(testData))
-      setCustomers(testData)
-    } else {
-      let data = localStorage["data"];
-      data = JSON.parse(data);
-      setCustomers(data)
+    const fetchData = async () => {
+      const response = await getAll("customer");
+      setCustomers(response)
     }
+    fetchData()
 
   }, [])
 
@@ -39,11 +33,34 @@ const Page: React.FC = () => {
   }
 
   const removeCustomer = (id: number) => {
-    let listLocalStorage = localStorage["data"]
-    listLocalStorage = JSON.parse(listLocalStorage)
-    const newList = listLocalStorage.filter((d: { id: number; }) => d.id !== id)
-    localStorage.setItem("data", JSON.stringify(newList))
-    window.location.reload()
+    showAlert({
+      header: "Are you sure do you want to delete " + id,
+      cssClass: "",
+      buttons: [
+        {
+          text: 'No',
+          cssClass: 'alert-button-cancel',
+        },
+        {
+          text: 'Yes',
+          cssClass: 'alert-button-confirm',
+          handler: () => {
+            const deleteCustomer = async () => {
+              const response = await deleteById("customer", id.toString())
+              if(response === 200){
+                showConfirm({
+                  header: 'Customer deleted process',
+                  message: 'Customer was deleted successfully',
+                  buttons: ['OK'],
+                })
+                setCustomers(customers?.filter(c => c.id !== id))
+              } 
+            }
+            deleteCustomer();
+          },
+        },
+      ]
+    })
   }
 
   return (

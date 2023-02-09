@@ -1,83 +1,99 @@
-import { IonButton, IonCard, IonCheckbox, IonCol, IonInput, IonItem, IonLabel, IonRow, IonTitle } from "@ionic/react"
-import { useHistory, useLocation, useParams } from "react-router";
+import { IonButton, IonCard, IonCol, IonInput, IonItem, IonLabel, IonRow, IonTitle, useIonAlert } from "@ionic/react"
+import { useLocation, useParams } from "react-router";
 import { Customer } from "../../interfaces/Customer.interface";
-import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useEffect, useState } from "react";
+import { create, getAll } from "../../connectApi/RequestApi";
 
 const FormCustomer = () => {
   const { id } = useParams<{ id: string }>();
   const { pathname } = useLocation<{ pathname: string; }>();
+  const [showAlert] = useIonAlert();
 
   const initialValues: Customer = { name: "", email: "", phone: "", address: "" };
 
-  let data = localStorage["data"];
-  data = JSON.parse(data);
-  const [values, setValues] = useState<Customer>(initialValues)
-  const history = useHistory()
+  const [customers, setCustomers] = useState<Customer[]>()
+  const [customer, setCustomer] = useState<Customer>(initialValues)
 
   useEffect(() => {
-    if (id) {
-      setValues(data.filter((data: { id: number; }) => data.id === parseInt(id))[0])
+    if(id){
+      const fetchData = async () => {
+        const response = await getAll("customer");
+        setCustomers(response)
+      }
+      fetchData()
     }
-  }, [history.location.pathname])
+  }, [])
 
-  const createCustomer = ()=>{
-    values.id = Math.floor(Math.random() * 100)
-    data.push(values)
-    localStorage.setItem("data", JSON.stringify(data))
-    
+  useEffect(() => {
+    if (id && customers) {
+      setCustomer(customers.filter(data => data.id === parseInt(id))[0])
+    }
+  }, [customers])
+
+  const createCustomer = async () => {
+    const response = await create("customer", customer)
+    response === 200
+      ? showAlert({
+        header: 'Success process',
+        message: 'Customer was created successfully',
+        buttons: ['OK'],
+      })
+      : showAlert({
+        header: 'Process failed',
+        message: 'The proccess to create new customer was failed, please try again later',
+        buttons: ['OK'],
+      })
   }
 
-  const editCustomer = (id: any)=>{
-    let filterUser = data.filter((d: { id: any; }) => d.id !== id)
-    filterUser.push(values)
-    localStorage.setItem("data", JSON.stringify(filterUser))
+  const editCustomer = (id: any): void => {
+    console.log("The feature comming soon will be completed")
+    
   }
 
   return (
     <div>
       <IonCard>
-        <IonTitle style={{padding: "18px 18px 0"}}>{pathname === "/page/create-customer"
+        <IonTitle style={{ padding: "18px 18px 0" }}>{pathname === "/page/create-customer"
           ? "Create new customer"
           : `Edit customer`}
         </IonTitle>
-          <IonRow style={{ marginBottom: "36px"}}>
-            <IonCol>
-              <IonItem>
-                <IonLabel position="stacked">Fullname</IonLabel>
-                <IonInput value={values.name}
-                  onIonChange={e => values.name = String(e.detail.value)}></IonInput>
-              </IonItem>
-            </IonCol>
-            <IonCol>
-              <IonItem>
-                <IonLabel position="stacked">Email</IonLabel>
-                <IonInput value={values.email}
-                  onIonChange={e => values.email = String(e.detail.value)}></IonInput>
-              </IonItem>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <IonItem>
-                <IonLabel position="stacked">Phone number</IonLabel>
-                <IonInput value={values.phone}
-                  onIonChange={e => values.phone = String(e.detail.value)}></IonInput>
-              </IonItem>
-            </IonCol>
-            <IonCol>
-              <IonItem>
-                <IonLabel position="stacked">Address</IonLabel>
-                <IonInput value={values.address}
-                  onIonChange={e => values.address = String(e.detail.value)}></IonInput>
-              </IonItem>
-            </IonCol>
-          </IonRow>
+        <IonRow style={{ marginBottom: "36px" }}>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="stacked">Fullname</IonLabel>
+              <IonInput value={customer.name}
+                onIonChange={e => customer.name = String(e.detail.value)}></IonInput>
+            </IonItem>
+          </IonCol>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="stacked">Email</IonLabel>
+              <IonInput value={customer.email}
+                onIonChange={e => customer.email = String(e.detail.value)}></IonInput>
+            </IonItem>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="stacked">Phone number</IonLabel>
+              <IonInput value={customer.phone}
+                onIonChange={e => customer.phone = String(e.detail.value)}></IonInput>
+            </IonItem>
+          </IonCol>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="stacked">Address</IonLabel>
+              <IonInput value={customer.address}
+                onIonChange={e => customer.address = String(e.detail.value)}></IonInput>
+            </IonItem>
+          </IonCol>
+        </IonRow>
 
-          <IonRow style={{ display: "flex", justifyContent: "space-around", margin: "36px 0 18px"}}>
-            <IonButton onClick={ id ? () => editCustomer(values.id) : createCustomer } color={"success"}>{pathname === "/create-customer" ? "Create new customer" : "Save changes"}</IonButton>
-            <IonButton color={"warning"}>Cancel</IonButton>
-          </IonRow>    
+        <IonRow style={{ display: "flex", justifyContent: "space-around", margin: "36px 0 18px" }}>
+          <IonButton onClick={id ? () => editCustomer(customer.id) : createCustomer} color={"success"}>{pathname === "/create-customer" ? "Create new customer" : "Save changes"}</IonButton>
+          <IonButton color={"warning"}>Cancel</IonButton>
+        </IonRow>
       </IonCard>
     </div>
   )
