@@ -1,6 +1,6 @@
-import { IonButton, IonCard, IonCol, IonInput, IonItem, IonLabel, IonRow, IonTitle, useIonAlert } from "@ionic/react"
-import { useLocation, useParams } from "react-router";
-import { Customer } from "../../interfaces/Customer.interface";
+import { IonButton, IonButtons, IonCard, IonCol, IonHeader, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
+import { useHistory, useLocation, useParams } from "react-router";
+import { ICustomer } from "../../interfaces/Customer.interface";
 import { useEffect, useState } from "react";
 import { create, getAll } from "../../connectApi/RequestApi";
 
@@ -8,11 +8,13 @@ const FormCustomer = () => {
   const { id } = useParams<{ id: string }>();
   const { pathname } = useLocation<{ pathname: string; }>();
   const [showAlert] = useIonAlert();
+  const history = useHistory();
 
-  const initialValues: Customer = { name: "", email: "", phone: "", address: "" };
+  // Data to load a customer if id is pass by param
+  const initialValues: ICustomer = { name: "", email: "", phone: "", address: "" };
+  const [customer, setCustomer] = useState<ICustomer>(initialValues)
 
-  const [customers, setCustomers] = useState<Customer[]>()
-  const [customer, setCustomer] = useState<Customer>(initialValues)
+  const [customers, setCustomers] = useState<ICustomer[]>()
 
   useEffect(() => {
     if(id){
@@ -30,28 +32,31 @@ const FormCustomer = () => {
     }
   }, [customers])
 
-  const createCustomer = async () => {
+  const createOrEdit = async () => {
     const response = await create("customer", customer)
     response === 200
       ? showAlert({
         header: 'Success process',
-        message: 'Customer was created successfully',
+        message: id ? 'Customer was updated successfully' : 'Customer was created successfully',
         buttons: ['OK'],
       })
       : showAlert({
         header: 'Process failed',
-        message: 'The proccess to create new customer was failed, please try again later',
+        message: id ? 'The proccess to update customer was failed, please try again later' : 'The proccess to create new customer was failed, please try again later',
         buttons: ['OK'],
       })
   }
 
-  const editCustomer = (id: any): void => {
-    console.log("The feature comming soon will be completed")
-    
-  }
 
   return (
     <div>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonMenuButton />
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
       <IonCard>
         <IonTitle style={{ padding: "18px 18px 0" }}>{pathname === "/page/create-customer"
           ? "Create new customer"
@@ -91,8 +96,8 @@ const FormCustomer = () => {
         </IonRow>
 
         <IonRow style={{ display: "flex", justifyContent: "space-around", margin: "36px 0 18px" }}>
-          <IonButton onClick={id ? () => editCustomer(customer.id) : createCustomer} color={"success"}>{pathname === "/create-customer" ? "Create new customer" : "Save changes"}</IonButton>
-          <IonButton color={"warning"}>Cancel</IonButton>
+          <IonButton onClick={createOrEdit} color={"success"}>{pathname === "/create-customer" ? "Create new customer" : "Save changes"}</IonButton>
+          <IonButton onClick={()=> history.push("/page/customers")} color={"warning"}>Cancel</IonButton>
         </IonRow>
       </IonCard>
     </div>

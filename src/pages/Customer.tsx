@@ -3,12 +3,12 @@ import { addCircle, closeOutline, pencil } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { deleteById, getAll } from '../connectApi/RequestApi';
-import { Customer } from '../interfaces/Customer.interface';
-import './Page.css';
+import { ICustomer } from '../interfaces/Customer.interface';
 
-const Page: React.FC = () => {
+const Customer: React.FC = () => {
   const { name } = useParams<{ name: string; }>();
-  const [customers, setCustomers] = useState<Customer[]>();
+  const history = useHistory()
+  const [customers, setCustomers] = useState<ICustomer[]>();
   const [showAlert] = useIonAlert();
   const [showConfirm] = useIonAlert();
 
@@ -18,10 +18,8 @@ const Page: React.FC = () => {
       setCustomers(response)
     }
     fetchData()
-
   }, [])
 
-  const history = useHistory()
   const editCustomer = (id: number) => {
     history.push("/page/edit-customer/" + id)
     window.location.reload()
@@ -34,8 +32,8 @@ const Page: React.FC = () => {
 
   const removeCustomer = (id: number) => {
     showAlert({
-      header: "Are you sure do you want to delete " + id,
-      cssClass: "",
+      header: "Are you sure?" ,
+      cssClass: "alert-button-cancel",
       buttons: [
         {
           text: 'No',
@@ -70,17 +68,14 @@ const Page: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>{name}</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">{name}</IonTitle>
           </IonToolbar>
         </IonHeader>
-        {/* <ExploreContainer name={name} /> */}
         <IonGrid>
           <IonCard>
             <div className='titleTable'>
@@ -123,4 +118,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+export default Customer;
