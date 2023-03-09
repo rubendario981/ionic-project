@@ -4,9 +4,9 @@
 
 ## Requirements
 
-- Node.js 
-- npm
-- Ionic CLI
+- npm - Package manager
+- Node.js - Engine repository
+- Ionic CLI - Client side
 - The backend repository cloned and runnung in your localhost, you can clone and deploy it in your localhost in the link below
 
     [Backend repository] - Springboot server

@@ -1,5 +1,5 @@
 import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/react';
-import { IonReactHashRouter, IonReactRouter } from '@ionic/react-router';
+import { IonReactHashRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './components/Menu';
 import Customer from './pages/Customer';
@@ -27,17 +27,19 @@ import FormCustomer from './pages/formCustomer/FormCustomer';
 import FormEmployee from './pages/formEmployee/FormEmployee';
 import FormSupplier from './pages/formSupplier/FormSupplier';
 import Suppliers from './pages/Suppliers';
+import Home from './pages/Home';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   return (
     <IonApp>
-      <IonReactRouter>
+      <IonReactHashRouter>
         <IonSplitPane contentId="main">
           <Menu />
           <IonRouterOutlet id="main">
             <Route path="/" exact={true}>
+              <Home />
               <Redirect to="/page/customers" />
             </Route>
             <Route path="/page/customers" exact={true}>
@@ -71,7 +73,7 @@ const App: React.FC = () => {
             </Route>
           </IonRouterOutlet>
         </IonSplitPane>
-      </IonReactRouter>
+      </IonReactHashRouter>
     </IonApp>
   );
 };

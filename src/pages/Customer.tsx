@@ -1,12 +1,11 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRow, IonCol, IonGrid, IonIcon, IonCard, IonButton, useIonAlert } from '@ionic/react';
 import { addCircle, closeOutline, pencil } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useHistory } from 'react-router';
 import { deleteById, getAll } from '../connectApi/RequestApi';
 import { ICustomer } from '../interfaces/Customer.interface';
 
 const Customer: React.FC = () => {
-  const { name } = useParams<{ name: string; }>();
   const history = useHistory()
   const [customers, setCustomers] = useState<ICustomer[]>();
   const [showAlert] = useIonAlert();
@@ -18,7 +17,7 @@ const Customer: React.FC = () => {
       setCustomers(response)
     }
     fetchData()
-  }, [])
+  }, [history.location.pathname])
 
   const editCustomer = (id: number) => {
     history.push("/page/edit-customer/" + id)
@@ -93,7 +92,7 @@ const Customer: React.FC = () => {
               <IonCol size='1'>Actions</IonCol>
             </IonRow>
             <div className="bodyTable">
-              {customers?.map((data, index) => (
+              {Array.isArray(customers) && customers?.map((data, index) => (
                 <IonRow key={index} className="cellTable">
                   <IonCol size='3'>{data.name}</IonCol>
                   <IonCol size='3'>{data.email}</IonCol>

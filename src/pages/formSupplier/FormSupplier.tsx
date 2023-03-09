@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCard, IonCol, IonHeader, IonInput, IonItem, IonLabel, IonMenuButton, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
+import { IonButton, IonButtons, IonCard, IonCol, IonHeader, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonRow, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { create, getAll } from '../../connectApi/RequestApi';
@@ -22,13 +22,13 @@ const FormSupplier = () => {
       }
       fetchData()
     }
-  }, [])
+  }, [id])
 
   useEffect(() => {
     if (id && suppliers) {
       setSupplier(suppliers?.filter(data => data.id === parseInt(id))[0])
     }
-  }, [suppliers])
+  }, [id, suppliers])
   
   const createOrEdit = async () => {
     const response = await create("supplier/", supplier);
@@ -46,7 +46,7 @@ const FormSupplier = () => {
   }
 
   return (
-    <div>
+    <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -113,7 +113,7 @@ const FormSupplier = () => {
           <IonButton onClick={() => history.push("/page/suppliers")} color={"warning"}>Cancel</IonButton>
         </IonRow>
       </IonCard>
-    </div>
+    </IonPage>
   )
 }
 

@@ -24,13 +24,13 @@ const FormCustomer = () => {
       }
       fetchData()
     }
-  }, [])
+  }, [id])
 
   useEffect(() => {
     if (id && customers) {
       setCustomer(customers.filter(data => data.id === parseInt(id))[0])
     }
-  }, [customers])
+  }, [id, customers])
 
   const createOrEdit = async () => {
     const response = await create("customer", customer)
@@ -49,7 +49,7 @@ const FormCustomer = () => {
 
 
   return (
-    <div>
+    <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -100,7 +100,7 @@ const FormCustomer = () => {
           <IonButton onClick={()=> history.push("/page/customers")} color={"warning"}>Cancel</IonButton>
         </IonRow>
       </IonCard>
-    </div>
+    </IonPage>
   )
 }
 

@@ -6,7 +6,6 @@ import { deleteById, getAll } from '../connectApi/RequestApi';
 import { IEmployee } from '../interfaces/Employe.interface';
 
 const Employee: React.FC = () => {
-	const initialValues = { name: "" };
 	const [employees, setEmployees] = useState<IEmployee[]>();
 	const history = useHistory();
 	const [showAlert] = useIonAlert();
@@ -18,7 +17,7 @@ const Employee: React.FC = () => {
 			setEmployees(response)
 		}
 		fetchData()
-	}, [])
+	}, [history.location.pathname])
 
 	const createEmployee = () => {
 		history.push("/page/create-employee")
@@ -80,7 +79,6 @@ const Employee: React.FC = () => {
 					<IonToolbar>
 					</IonToolbar>
 				</IonHeader>
-				{/* <ExploreContainer name={name} /> */}
 				<IonGrid>
 					<IonCard>
 						<div className='titleTable'>

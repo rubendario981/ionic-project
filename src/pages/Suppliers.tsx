@@ -17,7 +17,7 @@ const Suppliers: React.FC = () => {
       setSuppliers(response)
     }
     fetchData()
-  }, [])
+  }, [history.location.pathname])
 
   const createSupplier = () => {    
 		history.push("/page/create-supplier")
@@ -76,7 +76,6 @@ const Suppliers: React.FC = () => {
           <IonToolbar>
           </IonToolbar>
         </IonHeader>
-        {/* <ExploreContainer name={name} /> */}
         <IonGrid>
           <IonCard>
             <div className='titleTable'>

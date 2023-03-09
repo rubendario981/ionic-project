@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCard, IonCol, IonHeader, IonInput, IonItem, IonLabel, IonMenuButton, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
+import { IonButton, IonButtons, IonCard, IonCol, IonHeader, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar, useIonAlert } from "@ionic/react"
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { create, getAll } from '../../connectApi/RequestApi';
@@ -20,13 +20,13 @@ const FormEmployee = () => {
       setEmployees(response)
     }
     fetchData()
-  }, [])
+  }, [id])
 
   useEffect(() => {
     if (id && employees) {
       setEmployee(employees.filter(data => data.id === parseInt(id))[0])
     }
-  }, [employees])
+  }, [id, employees])
 
 
   const createOrEdit = async () => {
@@ -46,7 +46,7 @@ const FormEmployee = () => {
 
 
   return (
-    <div>
+    <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -123,7 +123,7 @@ const FormEmployee = () => {
           <IonButton onClick={() => history.push("/page/employees")} color={"warning"}>Cancel</IonButton>
         </IonRow>
       </IonCard>
-    </div>
+    </IonPage>
   )
 }
 
